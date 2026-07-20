@@ -14,9 +14,9 @@ An isolated rebuild of the MacroPad desktop application using Tauri 2, React, an
 
 Hardware events, device discovery, host-controlled OLED/lighting, signed desktop updates, and verified ESP32-S3 firmware flashing are implemented. Distribution builds must embed the release endpoint and public key; see [docs/UPDATER.md](docs/UPDATER.md).
 
-Pushing a matching semantic-version tag such as `v3.0.0` runs the GitHub-only
-release pipeline in `.github/workflows/release.yml`. It publishes signed desktop
-bundles and USB firmware to GitHub Releases; no separate update server is needed.
+The manual GitHub Actions workflow in `.github/workflows/release.yml` can publish
+signed desktop bundles for every supported platform plus USB firmware. Local
+Windows releases do not start that workflow; no separate update server is needed.
 
 ## Run
 

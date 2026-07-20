@@ -30,10 +30,18 @@ for ($index = 0; $index -lt 3; $index++) {
 }
 $platformio = Get-Command pio -ErrorAction SilentlyContinue
 if (-not $platformio) {
-    $platformio = Get-Command platformio -ErrorAction Stop
+    $platformio = Get-Command platformio -ErrorAction SilentlyContinue
+}
+$platformioExecutable = if ($platformio) {
+    $platformio.Source
+} else {
+    Join-Path ([Environment]::GetFolderPath('UserProfile')) '.platformio\penv\Scripts\platformio.exe'
+}
+if (-not (Test-Path -LiteralPath $platformioExecutable)) {
+    throw 'PlatformIO was not found. Install PlatformIO Core before publishing firmware.'
 }
 
-& $platformio.Source run --project-dir $firmwareRoot
+& $platformioExecutable run --project-dir $firmwareRoot
 if ($LASTEXITCODE -ne 0) { throw 'Firmware build failed.' }
 
 $buildDirectory = Join-Path $firmwareRoot '.pio\build\esp32-s3-devkitm-1'
@@ -67,7 +75,7 @@ try {
 
     $packagePath = Join-Path $releaseDirectory "macropad-firmware-$Version.zip"
     Compress-Archive -Path (Join-Path $stagingDirectory '*') -DestinationPath $packagePath -Force
-    $npm = (Get-Command npm -ErrorAction Stop).Source
+    $npm = if ([Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT) { 'npm.cmd' } else { 'npm' }
     & $npm run tauri -- signer sign $packagePath
     if ($LASTEXITCODE -ne 0) { throw 'Firmware signing failed.' }
 

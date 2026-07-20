@@ -56,18 +56,33 @@ https://github.com/Lumslucky/MacropadSoftware/releases/latest/download/firmware-
 The repository must be public for installations to download releases without
 credentials. The private signing key never belongs in the repository.
 
-To publish, synchronize the application version in `package.json`,
+To publish all platforms, synchronize the application version in `package.json`,
 `src-tauri/Cargo.toml`, and `src-tauri/tauri.conf.json`, commit and push the
-changes, then push the matching tag:
-
-```powershell
-git tag v3.0.0
-git push origin v3.0.0
-```
+changes, then open **Actions → Publish signed MacroPad release → Run workflow**
+and enter the matching tag, such as `v3.0.1`.
 
 The release stays as a draft until every desktop target and the firmware have
 built and been signed. The final job attaches the firmware manifest and package,
 publishes the release, and marks it as latest. A failed build is never promoted.
+
+## Faster local Windows release
+
+To build only the signed Windows release and USB firmware on the development
+computer, run:
+
+```powershell
+cd C:\Users\lumsl\Desktop\Projects\MacroPadSoftware\macropad-v3
+.\scripts\Build-LocalWindowsRelease.ps1
+```
+
+The script reads the key pair from `%USERPROFILE%\.tauri`, securely prompts for
+the signing password, runs the test suites, and produces a ready-to-upload folder
+under `release/github/v<version>/`. Use `-SkipTests` for a repeat build after the
+same source revision has already passed its tests.
+
+Create the matching GitHub release and upload every file in that folder. This
+local path publishes Windows updates only; use GitHub Actions when macOS and
+Linux installers are required.
 
 ## Publish a desktop release
 
