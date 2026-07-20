@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MacroPadConfig</title>
+    <link rel="stylesheet" href="main.css" />
+  </head>
+  <body>
+    <div class="background">
+      <div class="side-panel-container glasmorphism-bkg">
+        <div class="time-info-container">
+          <div class="time-container" id="time-container">10:16</div>
+          <div class="date-container" id="date-container">05/21/2024</div>
+        </div>
+        <div class="info-container">
+          <div class="status-container" id="connection-status">
+            DISCONNECTED
+          </div>
+          <div class="stringdesc-container">Name: <a>ESP32-macro-Pad</a></div>
+          <div class="vendorid-container">VendorID: <a>12346</a></div>
+          <div class="productid-container">ProductID: <a>4097</a></div>
+          <!-- IDs are given by the Firmware -->
+          <!-- <button class="reconnect-btn glasmorphism-bkg" onclick="ConnectTo()">
+            RECONNECT
+          </button> -->
+        </div>
+      </div>
+      <div class="main-panel-container disconnect-overlay glasmorphism-bkg">
+        <div class="left-select-container">
+          <!--  -->
+          <div class="button-select-conatiner-left">
+            <!--  -->
+            <div class="select-label-container">
+              <div class="name-label">Rotary Button</div>
+              <div class="action-label">
+                <h1>Short</h1>
+                <h1>Long</h1>
+              </div>
+            </div>
+            <select
+              oninput="ChangeOwnAction(this, 6, 0)"
+              class="glasmorphism-bkg"
+              name="rty-btn-short"
+              id="rty-1-0"
+            >
+              <option value="0">No Action</option>
+              <option value="1">Increase Volume</option>
+              <option value="2">Decrease Volume</option>
+              <option value="3">Toggle Mute</option>
+              <option value="4">Play Track</option>
+              <option value="5">Pause Track</option>
+              <option value="6">Skip Track</option>
+              <option value="7">Next Track</option>
+              <option value="8">Previous Track</option>
+              <option value="9">Open</option>
+            </select>
+            <select
+              onchange="ChangeOwnAction(this, 6, 1)"
+              class="glasmorphism-bkg"
+              name="rty-btn-long"
+              id="rty-1-1"
+            >
+              <option value="0">No Action</option>
+              <option value="1">Increase Volume</option>
+              <option value="2">Decrease Volume</option>
+              <option value="3">Toggle Mute</option>
+              <option value="4">Play Track</option>
+              <option value="5">Pause Track</option>
+              <option value="6">Skip Track</option>
+              <option value="7">Next Track</option>
+              <option value="8">Previous Track</option>
+              <option value="9">Open</option>
+            </select>
+          </div>
+
+          <div class="button-select-conatiner-left">
+            <div class="select-label-container">
+              <div class="name-label">Rotary Twist</div>
+              <div class="action-label">
+                <h1>Left</h1>
+                <h1>Right</h1>
+              </div>
+            </div>
+            <select
+              onchange="ChangeOwnAction(this, 7, 0)"
+              class="glasmorphism-bkg"
+              name="rty-tws-left"
+              id="rty-2-0"
+            >
+              <option value="0">No Action</option>
+              <option value="1">Increase Volume</option>
+              <option value="2">Decrease Volume</option>
+              <option value="3">Toggle Mute</option>
+              <option value="4">Play Track</option>
+              <option value="5">Pause Track</option>
+              <option value="6">Skip Track</option>
+              <option value="7">Next Track</option>
+              <option value="8">Previous Track</option>
+              <option value="9">Open</option>
+            </select>
+            <select
+              onchange="ChangeOwnAction(this, 7, 1)"
+              class="glasmorphism-bkg"
+              name="rty-tws-right"
+              id="rty-2-1"
+            >
+              <option value="0">No Action</option>
+              <option value="1">Increase Volume</option>
+              <option value="2">Decrease Volume</option>
+              <option value="3">Toggle Mute</option>
+              <option value="4">Play Track</option>
+              <option value="5">Pause Track</option>
+              <option value="6">Skip Track</option>
+              <option value="7">Next Track</option>
+              <option value="8">Previous Track</option>
+              <option value="9">Open</option>
+            </select>
+          </div>
+
+          <div class="button-select-conatiner-left">
+            <div class="select-label-container">
+              <div class="name-label">Button 6</div>
+              <div class="action-label">
+                <h1>Short</h1>
+                <h1>Long</h1>
+              </div>
+            </div>
+            <select
+              onchange="ChangeOwnAction(this, 5, 0)"
+              class="glasmorphism-bkg"
+              name="btn-6-short"
+              id="btn-6-0"
+            >
+              <option value="0">No Action</option>
+              <option value="1">Increase Volume</option>
+              <option value="2">Decrease Volume</option>
+              <option value="3">Toggle Mute</option>
+              <option value="4">Play Track</option>
+              <option value="5">Pause Track</option>
+              <option value="6">Skip Track</option>
+              <option value="7">Next Track</option>
+              <option value="8">Previous Track</option>
+              <option value="9">Open</option>
+            </select>
+            <select
+              onchange="ChangeOwnAction(this, 5, 1)"
+              class="glasmorphism-bkg"
+              name="btn-6-long"
+              id="btn-6-1"
+            >
+              <option value="0">No Action</option>
+              <option value="1">Increase Volume</option>
+              <option value="2">Decrease Volume</option>
+              <option value="3">Toggle Mute</option>
+              <option value="4">Play Track</option>
+              <option value="5">Pause Track</option>
+              <option value="6">Skip Track</option>
+              <option value="7">Next Track</option>
+              <option value="8">Previous Track</option>
+              <option value="9">Open</option>
+            </select>
+          </div>
+
+          <div class="button-select-conatiner-left">
+            <div class="select-label-container">
+              <div class="name-label">Button 5</div>
+              <div class="action-label">
+                <h1>Short</h1>
+                <h1>Long</h1>
+              </div>
+            </div>
+            <select
+              onchange="ChangeOwnAction(this, 4, 0)"
+              class="glasmorphism-bkg"
+              name="btn-5-short"
+              id="btn-5-0"
+            >
+              <option value="0">No Action</option>
+              <option value="1">Increase Volume</option>
+              <option value="2">Decrease Volume</option>
+              <option value="3">Toggle Mute</option>
+              <option value="4">Play Track</option>
+              <option value="5">Pause Track</option>
+              <option value="6">Skip Track</option>
+              <option value="7">Next Track</option>
+              <option value="8">Previous Track</option>
+              <option value="9">Open</option>
+            </select>
+            <select
+              onchange="ChangeOwnAction(this, 4, 1)"
+              class="glasmorphism-bkg"
+              name="btn-5-long"
+              id="btn-5-1"
+            >
+              <option value="0">No Action</option>
+              <option value="1">Increase Volume</option>
+              <option value="2">Decrease Volume</option>
+              <option value="3">Toggle Mute</option>
+              <option value="4">Play Track</option>
+              <option value="5">Pause Track</option>
+              <option value="6">Skip Track</option>
+              <option value="7">Next Track</option>
+              <option value="8">Previous Track</option>
+              <option value="9">Open</option>
+            </select>
+          </div>
+
+          <div class="button-select-conatiner-left">
+            <div class="select-label-container">
+              <div class="name-label">Button 4</div>
+              <div class="action-label">
+                <h1>Short</h1>
+                <h1>Long</h1>
+              </div>
+            </div>
+            <select
+              onchange="ChangeOwnAction(this, 3, 0)"
+              class="glasmorphism-bkg"
+              name="btn-4-short"
+              id="btn-4-0"
+            >
+              <option value="0">No Action</option>
+              <option value="1">Increase Volume</option>
+              <option value="2">Decrease Volume</option>
+              <option value="3">Toggle Mute</option>
+              <option value="4">Play Track</option>
+              <option value="5">Pause Track</option>
+              <option value="6">Skip Track</option>
+              <option value="7">Next Track</option>
+              <option value="8">Previous Track</option>
+              <option value="9">Open</option>
+            </select>
+            <select
+              onchange="ChangeOwnAction(this, 3, 1)"
+              class="glasmorphism-bkg"
+              name="btn-4-long"
+              id="btn-4-1"
+            >
+              <option value="0">No Action</option>
+              <option value="1">Increase Volume</option>
+              <option value="2">Decrease Volume</option>
+              <option value="3">Toggle Mute</option>
+              <option value="4">Play Track</option>
+              <option value="5">Pause Track</option>
+              <option value="6">Skip Track</option>
+              <option value="7">Next Track</option>
+              <option value="8">Previous Track</option>
+              <option value="9">Open</option>
+            </select>
+          </div>
+        </div>
+        <!-- 
+
+
+
+
+
+         -->
+        <div class="middle-image-container" , id="middle-image-container">
+          <img
+            src="./images/macropaddisconnected.png"
+            alt=""
+            id="macropadimage"
+          />
+          <!-- <button
+            onclick="SendListOfActions()"
+            class="glasmorphism-bkg save-btn"
+          >
+            Save
+          </button> -->
+        </div>
+        <!-- 
+
+
+
+
+
+         -->
+        <div class="left-select-container">
+          <!--  -->
+          <div class="button-select-conatiner-left">
+            <!--  -->
+            <div class="select-label-container">
+              <div class="name-label">Display</div>
+            </div>
+
+            <select class="glasmorphism-bkg" name="dsp" id="dsp">
+              <option value="0">Off</option>
+              <option value="1">Time / Date</option>
+              <option value="2">Weather</option>
+              <option value="3">Volume</option>
+            </select>
+          </div>
+
+          <div class="button-select-conatiner-left">
+            <div class="select-label-container">
+              <div class="name-label">Button 3</div>
+              <div class="action-label">
+                <h1>Short</h1>
+                <h1>Long</h1>
+              </div>
+            </div>
+            <select
+              onchange="ChangeOwnAction(this, 2, 0)"
+              class="glasmorphism-bkg"
+              name="btn-3-short"
+              id="btn-3-0"
+            >
+              <option value="0">No Action</option>
+              <option value="1">Increase Volume</option>
+              <option value="2">Decrease Volume</option>
+              <option value="3">Toggle Mute</option>
+              <option value="4">Play Track</option>
+              <option value="5">Pause Track</option>
+              <option value="6">Skip Track</option>
+              <option value="7">Next Track</option>
+              <option value="8">Previous Track</option>
+              <option value="9">Open</option>
+            </select>
+            <select
+              onchange="ChangeOwnAction(this, 2, 1)"
+              class="glasmorphism-bkg"
+              name="btn-3-long"
+              id="btn-3-1"
+            >
+              <option value="0">No Action</option>
+              <option value="1">Increase Volume</option>
+              <option value="2">Decrease Volume</option>
+              <option value="3">Toggle Mute</option>
+              <option value="4">Play Track</option>
+              <option value="5">Pause Track</option>
+              <option value="6">Skip Track</option>
+              <option value="7">Next Track</option>
+              <option value="8">Previous Track</option>
+              <option value="9">Open</option>
+            </select>
+          </div>
+
+          <div class="button-select-conatiner-left">
+            <div class="select-label-container">
+              <div class="name-label">Button 2</div>
+              <div class="action-label">
+                <h1>Short</h1>
+                <h1>Long</h1>
+              </div>
+            </div>
+            <select
+              onchange="ChangeOwnAction(this, 1, 0)"
+              class="glasmorphism-bkg"
+              name="btn-2-short"
+              id="btn-2-0"
+            >
+              <option value="0">No Action</option>
+              <option value="1">Increase Volume</option>
+              <option value="2">Decrease Volume</option>
+              <option value="3">Toggle Mute</option>
+              <option value="4">Play Track</option>
+              <option value="5">Pause Track</option>
+              <option value="6">Skip Track</option>
+              <option value="7">Next Track</option>
+              <option value="8">Previous Track</option>
+              <option value="9">Open</option>
+            </select>
+            <select
+              onchange="ChangeOwnAction(this, 1, 1)"
+              class="glasmorphism-bkg"
+              name="btn-2-long"
+              id="btn-2-1"
+            >
+              <option value="0">No Action</option>
+              <option value="1">Increase Volume</option>
+              <option value="2">Decrease Volume</option>
+              <option value="3">Toggle Mute</option>
+              <option value="4">Play Track</option>
+              <option value="5">Pause Track</option>
+              <option value="6">Skip Track</option>
+              <option value="7">Next Track</option>
+              <option value="8">Previous Track</option>
+              <option value="9">Open</option>
+            </select>
+          </div>
+
+          <div class="button-select-conatiner-left">
+            <div class="select-label-container">
+              <div class="name-label">Button 1</div>
+              <div class="action-label">
+                <h1>Short</h1>
+                <h1>Long</h1>
+              </div>
+            </div>
+            <select
+              onchange="ChangeOwnAction(this, 0, 0)"
+              class="glasmorphism-bkg"
+              name="btn-1-short"
+              id="btn-1-0"
+            >
+              <option value="0">No Action</option>
+              <option value="1">Increase Volume</option>
+              <option value="2">Decrease Volume</option>
+              <option value="3">Toggle Mute</option>
+              <option value="4">Play Track</option>
+              <option value="5">Pause Track</option>
+              <option value="6">Skip Track</option>
+              <option value="7">Next Track</option>
+              <option value="8">Previous Track</option>
+              <option value="9">Open</option>
+            </select>
+            <select
+              onchange="ChangeOwnAction(this, 0, 1)"
+              class="glasmorphism-bkg"
+              name="btn-1-long"
+              id="btn-1-1"
+            >
+              <option value="0">No Action</option>
+              <option value="1">Increase Volume</option>
+              <option value="2">Decrease Volume</option>
+              <option value="3">Toggle Mute</option>
+              <option value="4">Play Track</option>
+              <option value="5">Pause Track</option>
+              <option value="6">Skip Track</option>
+              <option value="7">Next Track</option>
+              <option value="8">Previous Track</option>
+              <option value="9">Open</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="index.js"></script>
+  <!-- <script type="module" src="./modules.js"></script> -->
+</html>

@@ -1,0 +1,44 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "color": {
+    "canvas": { "$value": "#090B10", "$type": "color" },
+    "surface1": { "$value": "#10141C", "$type": "color" },
+    "surface2": { "$value": "#171C26", "$type": "color" },
+    "surface3": { "$value": "#202735", "$type": "color" },
+    "line": { "$value": "#2B3444", "$type": "color" },
+    "text": { "$value": "#F4F7FB", "$type": "color" },
+    "textMuted": { "$value": "#9AA6B7", "$type": "color" },
+    "accent": { "$value": "#43D9C5", "$type": "color" },
+    "accentStrong": { "$value": "#78F3E2", "$type": "color" },
+    "violet": { "$value": "#8D7CFF", "$type": "color" },
+    "success": { "$value": "#54D68B", "$type": "color" },
+    "warning": { "$value": "#F3B95F", "$type": "color" },
+    "danger": { "$value": "#FF6577", "$type": "color" }
+  },
+  "space": {
+    "1": { "$value": "4px", "$type": "dimension" },
+    "2": { "$value": "8px", "$type": "dimension" },
+    "3": { "$value": "12px", "$type": "dimension" },
+    "4": { "$value": "16px", "$type": "dimension" },
+    "5": { "$value": "20px", "$type": "dimension" },
+    "6": { "$value": "24px", "$type": "dimension" },
+    "8": { "$value": "32px", "$type": "dimension" },
+    "10": { "$value": "40px", "$type": "dimension" },
+    "12": { "$value": "48px", "$type": "dimension" }
+  },
+  "radius": {
+    "small": { "$value": "6px", "$type": "dimension" },
+    "medium": { "$value": "10px", "$type": "dimension" },
+    "large": { "$value": "14px", "$type": "dimension" },
+    "round": { "$value": "999px", "$type": "dimension" }
+  },
+  "duration": {
+    "fast": { "$value": "100ms", "$type": "duration" },
+    "normal": { "$value": "180ms", "$type": "duration" },
+    "slow": { "$value": "220ms", "$type": "duration" }
+  },
+  "font": {
+    "sans": { "$value": "Inter, Segoe UI, system-ui, sans-serif", "$type": "fontFamily" },
+    "mono": { "$value": "JetBrains Mono, SFMono-Regular, Consolas, monospace", "$type": "fontFamily" }
+  }
+}

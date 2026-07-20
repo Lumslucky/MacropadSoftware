@@ -1,0 +1,186 @@
+* {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.background {
+  width: 100%;
+  height: 100vh;
+  background: #0f0c29;
+  background-image: url("./images/backgroundimage.png");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.side-panel-container {
+  position: absolute;
+  left: 2%;
+  top: 2%;
+  width: 20%;
+  height: 96%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.main-panel-container {
+  position: absolute;
+  right: 2%;
+  top: 2%;
+  width: 74%;
+  height: 96%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.middle-image-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.middle-image-container button {
+  position: absolute;
+  padding: 0.2vw;
+  color: antiquewhite;
+  bottom: 2vh;
+  font-size: 2vw;
+}
+
+.left-select-container {
+  width: 100%;
+  /* background-color: aqua; */
+  height: 95%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.button-select-conatiner-left {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.button-select-conatiner-left select {
+  margin: 0rem 0.5rem;
+}
+
+.action-label {
+  display: flex;
+  justify-content: space-around;
+}
+
+.action-label h1 {
+  display: inline;
+}
+.select-label-container .name-label {
+  width: 100%;
+  text-align: center;
+  font-size: 1.5vw;
+}
+
+.select-label-container .action-label {
+  width: 100%;
+}
+.button-select-conatiner-left .select-label-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  font-size: 0.5vw;
+}
+
+.button-select-conatiner-left select {
+  display: block;
+  text-align: center;
+  width: 10vw;
+  height: 2.3vw;
+  font-size: 1.5vh;
+  appearance: none;
+}
+.button-select-conatiner-left select:focus {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.button-select-conatiner-left * {
+  color: antiquewhite;
+  font-weight: 400;
+}
+
+.left-select-container select option {
+  display: block;
+  font-size: 2vh;
+}
+
+.middle-image-container img {
+  position: absolute;
+  width: 20vw;
+}
+.right-select-container {
+  width: 100%;
+  background-color: blue;
+  height: 100%;
+}
+
+.time-info-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+.time-container {
+  font-size: 6vw;
+  color: antiquewhite;
+}
+.date-container {
+  font-size: 3vw;
+  color: antiquewhite;
+}
+
+.info-container {
+  border-top: #7f7f8a 0.1vh solid;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  /* background-color: antiquewhite; */
+}
+.info-container * {
+  color: antiquewhite;
+  font-size: 1.5vw;
+  padding: 1vh;
+}
+.status-container {
+  color: red;
+}
+.reconnect-btn {
+  position: absolute;
+  bottom: 5vh;
+}
+.reconnect-btn:hover {
+  background-color: rgba(94, 93, 93, 1);
+}
+
+.save-btn:hover {
+  background-color: rgba(94, 93, 93, 1);
+}
+.glasmorphism-bkg {
+  /* From https://css.glass */
+  background: rgba(94, 93, 93, 0.21);
+  border-radius: 55px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.34);
+}

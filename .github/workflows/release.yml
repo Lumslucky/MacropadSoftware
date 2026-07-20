@@ -1,0 +1,222 @@
+name: Publish signed MacroPad release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: macropad-release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  MACROPAD_UPDATE_PUBLIC_KEY: ${{ vars.MACROPAD_UPDATE_PUBLIC_KEY }}
+  MACROPAD_APP_UPDATE_ENDPOINT: https://github.com/${{ github.repository }}/releases/latest/download/latest.json
+  MACROPAD_FIRMWARE_MANIFEST_URL: https://github.com/${{ github.repository }}/releases/latest/download/firmware-latest.json
+
+jobs:
+  metadata:
+    name: Validate release metadata
+    runs-on: ubuntu-latest
+    outputs:
+      app_version: ${{ steps.versions.outputs.app_version }}
+      firmware_version: ${{ steps.versions.outputs.firmware_version }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Validate signing configuration
+        shell: bash
+        env:
+          SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          test -n "$MACROPAD_UPDATE_PUBLIC_KEY" || {
+            echo "Repository variable MACROPAD_UPDATE_PUBLIC_KEY is missing." >&2
+            exit 1
+          }
+          test -n "$SIGNING_PRIVATE_KEY" || {
+            echo "Repository secret TAURI_SIGNING_PRIVATE_KEY is missing." >&2
+            exit 1
+          }
+          test -n "$SIGNING_PRIVATE_KEY_PASSWORD" || {
+            echo "Repository secret TAURI_SIGNING_PRIVATE_KEY_PASSWORD is missing." >&2
+            exit 1
+          }
+
+      - name: Validate versions
+        id: versions
+        shell: bash
+        run: |
+          set -euo pipefail
+          app_version=$(node -p "require('./macropad-v3/package.json').version")
+          tauri_version=$(node -p "require('./macropad-v3/src-tauri/tauri.conf.json').version")
+          cargo_version=$(sed -n 's/^version = "\([^"]*\)"/\1/p' macropad-v3/src-tauri/Cargo.toml | head -n 1)
+          tag_version=${GITHUB_REF_NAME#v}
+          firmware_version=$(node <<'NODE'
+          const fs = require('fs');
+          const source = fs.readFileSync('macropad-v3/firmware/src/main.cpp', 'utf8');
+          const part = (name) => {
+            const match = source.match(new RegExp(`kFirmwareVersion${name}\\s*=\\s*(\\d+)\\s*;`));
+            if (!match) throw new Error(`Missing firmware ${name} version constant`);
+            return match[1];
+          };
+          process.stdout.write(`${part('Major')}.${part('Minor')}.${part('Patch')}`);
+          NODE
+          )
+
+          test "$app_version" = "$tauri_version" || {
+            echo "package.json and tauri.conf.json versions differ." >&2
+            exit 1
+          }
+          test "$app_version" = "$cargo_version" || {
+            echo "package.json and Cargo.toml versions differ." >&2
+            exit 1
+          }
+          test "$app_version" = "$tag_version" || {
+            echo "Tag $GITHUB_REF_NAME must match application version $app_version." >&2
+            exit 1
+          }
+
+          echo "app_version=$app_version" >> "$GITHUB_OUTPUT"
+          echo "firmware_version=$firmware_version" >> "$GITHUB_OUTPUT"
+
+  firmware:
+    name: Build signed USB firmware
+    needs: metadata
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: macropad-v3
+    env:
+      TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+      TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: macropad-v3/package-lock.json
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install build tools
+        run: |
+          npm ci
+          python -m pip install --upgrade platformio
+
+      - name: Build, package, and sign firmware
+        shell: pwsh
+        run: |
+          $version = '${{ needs.metadata.outputs.firmware_version }}'
+          $packageUrl = "https://github.com/${{ github.repository }}/releases/latest/download/macropad-firmware-$version.zip"
+          ./scripts/Build-FirmwareRelease.ps1 `
+            -Version $version `
+            -PackageUrl $packageUrl `
+            -Notes "MacroPad USB firmware $version"
+
+      - name: Preserve firmware release files
+        uses: actions/upload-artifact@v7
+        with:
+          name: signed-firmware
+          path: |
+            macropad-v3/release/firmware/${{ needs.metadata.outputs.firmware_version }}/macropad-firmware-${{ needs.metadata.outputs.firmware_version }}.zip
+            macropad-v3/release/firmware/${{ needs.metadata.outputs.firmware_version }}/macropad-firmware-${{ needs.metadata.outputs.firmware_version }}.zip.sig
+            macropad-v3/release/firmware/${{ needs.metadata.outputs.firmware_version }}/firmware-latest.json
+          if-no-files-found: error
+
+  desktop:
+    name: Build ${{ matrix.name }}
+    needs: metadata
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Windows x64
+            platform: windows-latest
+            args: ""
+          - name: Linux x64
+            platform: ubuntu-22.04
+            args: ""
+          - name: macOS Apple Silicon
+            platform: macos-latest
+            args: --target aarch64-apple-darwin
+          - name: macOS Intel
+            platform: macos-latest
+            args: --target x86_64-apple-darwin
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: macropad-v3/package-lock.json
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ startsWith(matrix.platform, 'macos-') && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+
+      - name: Install Linux system dependencies
+        if: startsWith(matrix.platform, 'ubuntu-')
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libudev-dev
+
+      - name: Install frontend dependencies
+        working-directory: macropad-v3
+        run: npm ci
+
+      - name: Build and attach signed desktop bundles
+        uses: tauri-apps/tauri-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          projectPath: macropad-v3
+          tagName: ${{ github.ref_name }}
+          releaseName: MacroPad Studio ${{ needs.metadata.outputs.app_version }}
+          releaseBody: Signed desktop installers and USB firmware for MacroPad Studio.
+          generateReleaseNotes: true
+          releaseDraft: true
+          prerelease: false
+          uploadUpdaterJson: true
+          uploadUpdaterSignatures: true
+          updaterJsonPreferNsis: true
+          args: ${{ matrix.args }}
+
+  publish:
+    name: Attach firmware and publish release
+    needs:
+      - metadata
+      - firmware
+      - desktop
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: signed-firmware
+          path: signed-firmware
+
+      - name: Upload firmware and publish the completed release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          gh release upload "$GITHUB_REF_NAME" signed-firmware/* --clobber
+          gh release edit "$GITHUB_REF_NAME" --draft=false --latest
+          gh release view "$GITHUB_REF_NAME" --json url,tagName,isDraft
